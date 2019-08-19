@@ -39,13 +39,15 @@ make[1]: *** Waiting for unfinished jobs....
 ----
 
 [gbxml/ForwardTranslator.hpp](https://github.com/NREL/OpenStudio/blob/develop3/src/gbxml/ForwardTranslator.hpp#L110):
-```c++
+
+```
 std::set<openstudio::model::Material, openstudio::IdfObjectImplLess> m_materials;
 ```
 
 
 [IdfObject.hpp](https://github.com/NREL/OpenStudio/blob/develop3/src/utilities/idf/IdfObject.hpp#L433:L436)
-```c++
+
+```
 /** Function object for sorting objects by impl. \relates IdfObject */
 struct UTILITIES_API IdfObjectImplLess {
   bool operator()(const IdfObject& left, const IdfObject& right) const;
@@ -53,7 +55,8 @@ struct UTILITIES_API IdfObjectImplLess {
 ```
 
 [IdfObject.cpp](https://github.com/NREL/OpenStudio/blob/develop3/src/utilities/idf/IdfObject.cpp#L2387:L2390):
-```c++
+
+```
 /** Function object for sorting by impl. */
 bool IdfObjectImplLess::operator()(const IdfObject& left, const IdfObject& right) const {
   return (left.getImpl<detail::IdfObject_Impl>() < right.getImpl<detail::IdfObject_Impl>());
@@ -61,5 +64,14 @@ bool IdfObjectImplLess::operator()(const IdfObject& left, const IdfObject& right
 ```
 
 
+IdfObject has a private impl: `std::shared_ptr<detail::IdfObject_Impl> m_impl;`
+
+[IdfObject.hpp: IdfObject::getImpl](https://github.com/NREL/OpenStudio/blob/develop3/src/utilities/idf/IdfObject.hpp#L378:L380)
+
+```
+  template<typename T>
+    std::shared_ptr<T> getImpl() const
+  {  return std::dynamic_pointer_cast<T>(m_impl); }
+```
 
 I don't understand the error, I don't get what's non-const there.
