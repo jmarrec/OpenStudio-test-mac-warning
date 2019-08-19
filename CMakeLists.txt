@@ -157,4 +157,12 @@ endif()
 message("CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}")
 add_executable(test
   main.cpp
+  IdfObject.hpp
+  IdfObject_Impl.hpp
+  IdfObject.cpp
+  Material.hpp
+  Material_Impl.hpp
+  Material.cpp
+  ForwardTranslator.hpp
+  ForwardTranslator.cpp
 )
