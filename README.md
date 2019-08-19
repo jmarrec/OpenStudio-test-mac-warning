@@ -1,4 +1,11 @@
-Jenkins is still throwing on mac, cf https://ci.commercialbuildings.dev/blue/organizations/jenkins/openstudio-incremental-develop3/detail/PR-3587/30/pipeline/8/#step-89-log-717:
+# Incomplete type as key in std::set is making Mac throw
+
+Two branches: **master** (fails on mac, works fine on GCC), and **fixed** where I include `Material.hpp` in `ForwardTranslator.hpp` where `std::set<Material, IdfObjectImplLess>` is defined, and works on mac too.
+
+
+## Original problems
+
+Jenkins was throwing on mac only after enabling `-Werror`, cf https://ci.commercialbuildings.dev/blue/organizations/jenkins/openstudio-incremental-develop3/detail/PR-3587/30/pipeline/8/#step-89-log-717:
 
 ```
 In file included from /Users/jenkins/git/OpenStudioIncremental/develop3/src/gbxml/ForwardTranslator.cpp:30:
@@ -38,6 +45,9 @@ make[1]: *** Waiting for unfinished jobs....
 
 ----
 
+
+I couldn't figure out the error, since the comparator `IdfObjectImplLess` did seem to be `const`, as well as any functions called in the comparator (`IdfObject::getImpl`).
+
 [gbxml/ForwardTranslator.hpp](https://github.com/NREL/OpenStudio/blob/develop3/src/gbxml/ForwardTranslator.hpp#L110):
 
 ```
@@ -73,5 +83,3 @@ IdfObject has a private impl: `std::shared_ptr<detail::IdfObject_Impl> m_impl;`
     std::shared_ptr<T> getImpl() const
   {  return std::dynamic_pointer_cast<T>(m_impl); }
 ```
-
-I don't understand the error, I don't get what's non-const there.
