@@ -2,7 +2,9 @@
 #define GBXML_FORWARDTRANSLATOR_HPP
 
 #include "IdfObject.hpp"
-
+// Needed for the set! Otherwise Material is an incomplete type, compiler doesn't know Material derives from IdfObject and will not resolve the
+// `operator()` correctly and throw on mac
+#include "Material.hpp"
 #include <set>
 
 namespace openstudio {
