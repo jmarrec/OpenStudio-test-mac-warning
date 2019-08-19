@@ -83,3 +83,7 @@ IdfObject has a private impl: `std::shared_ptr<detail::IdfObject_Impl> m_impl;`
     std::shared_ptr<T> getImpl() const
   {  return std::dynamic_pointer_cast<T>(m_impl); }
 ```
+
+## Solution
+
+At the point of declaration of `std::set<Material, IdfObjectImplLess>`, in `gbxml/ForwardTranslator.hpp`, `Material` was just forward-declared so it's an incomplete type, and in particular the compiler can't know that `Material` derives from `IdfObject` and will not correctly resolve the `operator()` and throw this `error: the specified comparator type does not provide a const call operator [-Werror,-Wuser-defined-warnings]`.
